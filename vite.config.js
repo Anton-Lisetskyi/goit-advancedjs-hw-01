@@ -5,11 +5,7 @@ import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
-  const isProduction = command === 'build';
-
   return {
-    base: isProduction ? '/goit-advancedjs-hw-01/' : '/',
-
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
