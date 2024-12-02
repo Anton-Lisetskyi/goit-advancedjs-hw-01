@@ -5,13 +5,20 @@ import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
+  const isProduction = command === 'build';
+
   return {
+    base: isProduction ? '/goit-advancedjs-hw-01/' : '/',
+
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
+
     root: 'src',
     build: {
       sourcemap: true,
+      outDir: '../dist',
+      emptyOutDir: true,
       rollupOptions: {
         input: glob.sync('./src/*.html'),
         output: {
@@ -20,26 +27,15 @@ export default defineConfig(({ command }) => {
               return 'vendor';
             }
           },
-          entryFileNames: chunkInfo => {
-            if (chunkInfo.name === 'commonHelpers') {
-              return 'commonHelpers.js';
-            }
-            return '[name].js';
-          },
-          assetFileNames: assetInfo => {
-            if (assetInfo.name && assetInfo.name.endsWith('.html')) {
-              return '[name].[ext]';
-            }
-            return 'assets/[name]-[hash][extname]';
-          },
+          entryFileNames: '[name].js',
+          assetFileNames: 'assets/[name]-[hash][extname]',
         },
       },
-      outDir: '../dist',
-      emptyOutDir: true,
     },
+
     plugins: [
       injectHTML(),
-      FullReload(['./src/**/**.html']),
+      FullReload(['./src/**/*.html']),
       SortCss({
         sort: 'mobile-first',
       }),
